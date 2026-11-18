@@ -28,8 +28,8 @@ páginas e âncoras (`#palestras`, `#doe`…).
   - Cores (slugs): `blue` #0B6CA8 (principal), `blue-dark` #0A4A75, `purple` #3A3D78 (destaque),
     `ink` #1F2340, `yellow` #F6C324 (botão Pix), `light` #EEF5FB, `cream` #FFF7DC.
   - Ordem da página inicial (`patterns/home-page.php`): hero, opening-hours, upcoming-lectures
-    (com link "Assistir palestras anteriores"), activities, evangelization, donations, history (com o
-    vídeo dos 55 anos do YouTube, fUZSHs-TJAk), visit. O padrão `instagram` saiu da home (o Nilton
+    (com link "Assistir palestras anteriores"), activities, evangelization, donations, history, visit.
+    O vídeo dos 55 anos (YouTube fUZSHs-TJAk) não ficou bom na home: fica em destaque na página de história. O padrão `instagram` saiu da home (o Nilton
     prefere mostrar as gravações de palestras numa página própria).
   - `patterns/auta-de-souza.php` existe mas não é usado na home (o Nilton preferiu a seção "Nossa história").
 - `modules/neas-site/` — plugin (v2.2.1), slug `neas-site`; código em `includes/`
@@ -53,6 +53,8 @@ páginas e âncoras (`#palestras`, `#doe`…).
     Visitantes não são afetados. `?neas_preview=0` sai. Há botão na barra de admin
     ("Ver o site com o tema novo" / "Sair da prévia").
 - `content/pages/<slug>.html` — cópia do conteúdo (HTML de blocos) das páginas novas, exportada do site.
+- `docs/page-audit.md` — levantamento das páginas antigas (remodelar / substituídas / decidir / apagar
+  depois do lançamento). Nada é apagado antes do lançamento.
 - `build.sh` — gera `dist/<módulo>.zip` (a pasta dentro do zip = slug que o WordPress usa).
 - `tools/migrate-names.py` — migração única dos nomes antigos (português) para os novos; apagar após o lançamento.
 
@@ -72,6 +74,8 @@ páginas e âncoras (`#palestras`, `#doe`…).
 | 15373 | "Início (novo)" — privada, slug `inicio` (`content/pages/inicio.html`) |
 | 15374 | "Palestras" — privada, slug `palestras` |
 | 15400 | "Palestras anteriores" — privada, slug `palestras-anteriores` |
+| 15405 | "Nossa história (nova versão)" — privada, slug `neas-nova` (vídeo 55 anos + linha do tempo com o texto original da pág. 45) |
+| 45 | Página antiga "NEAS" (`/neas/`, pública; 6 fotos de 2017 quebradas) |
 | 15384 | "Auta de Souza (nova versão)" — privada, slug `auta-de-souza-nova` (retrato + texto original da pág. 57) |
 | 15383 | Mídia: retrato de Auta de Souza |
 | 57 | Página antiga "Auta de Souza" (pública; foto de 2017 quebrada) |
@@ -85,6 +89,11 @@ páginas e âncoras (`#palestras`, `#doe`…).
 ## Pendências
 - Token do Instagram ainda com permissões a mais (publicar, mensagens, anúncios): gerar um só com
   `instagram_basic`, trocar no `.env` e na tela Palestras → Instagram, revogar o antigo.
+- Receber do Nilton: QR code do Pix (seção Doações), foto dos trabalhadores (seção "Nossa história"),
+  fotos antigas da história (neas01–06.jpg de 2017 sumiram do servidor),
+  prints do site da FEB (febnet.org.br) como inspiração.
+- Após mudanças no tema/plugin: `./build.sh` e o Nilton envia o zip em Plugins/Temas → Adicionar novo →
+  Enviar → "Substituir o atual pelo enviado".
 - **Migração para os nomes em inglês (v2.0.0)** — aplicada em 2026-11-18: plugin `neas-site` ativo
   (o `neas-funcionalidades` foi apagado), tema `neas-theme` instalado e inativo, páginas e palestras
   atualizadas. Falta: o Nilton validar a prévia; depois apagar o tema antigo `neas` (mantido por
@@ -94,7 +103,7 @@ páginas e âncoras (`#palestras`, `#doe`…).
 1. Backup (Backuply).
 2. Ativar o tema `neas-theme`.
 3. Publicar 15373 (renomear para "Início") e definir como página inicial; publicar 15374.
-4. Passar o conteúdo de 15384 para a página 57 e apagar a 15384.
+4. Passar o conteúdo de 15384 para a página 57 e o de 15405 para a 45; apagar 15384 e 15405.
 5. Redirecionar `/paletras-publicas/` → `/palestras/`.
 6. Instalar e conectar Smash Balloon Instagram Feed (@neautadesouza) e trocar o shortcode pelo bloco.
 7. Verificar se o WooCommerce é usado; desativar o que não for (BuildPress, SiteOrigin, WooCommerce).
