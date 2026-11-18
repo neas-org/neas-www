@@ -50,7 +50,8 @@ páginas e âncoras (`#palestras`, `#doe`…).
 - WordPress 6.7.1, PHP 7.4.33 (LiteSpeed), pt_BR, fuso America/Recife. Tema antigo: BuildPress + SiteOrigin.
   Plugins: WooCommerce + Mercado Pago, Yoast, Akismet, Loginizer, Backuply, GoSMTP.
 - API REST: use `https://www.neas.org.br/?rest_route=/wp/v2/...` com autenticação básica por
-  **senha de aplicativo** (usuário "Nilton Vieira", administrador). Configure a sua própria —
+  **senha de aplicativo** (usuário "Nilton Vieira", administrador), lida de `~/.config/neas/wp.env`
+  (`NEAS_WP_USER`, `NEAS_WP_APP_PASSWORD`; fora do repositório, nunca commitar) —
   não está neste repositório. O mod_security devolve 406 sem um User-Agent de navegador:
   `curl -A "Mozilla/5.0 (X11; Linux x86_64) NEAS-site-setup" -H "Accept: application/json"`.
 - Não envie `template` ao atualizar páginas via REST enquanto o tema não estiver ativo (é rejeitado).
