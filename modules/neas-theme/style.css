@@ -1,0 +1,165 @@
+/*
+Theme Name: NEAS
+Description: Tema do Núcleo Espírita Auta de Souza. Leve, feito para o editor de blocos do WordPress, com as cores e a identidade visual da casa.
+Version: 2.0.0
+Requires at least: 6.5
+Tested up to: 6.7
+Requires PHP: 7.4
+Author: NEAS
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: neas-theme
+*/
+
+/* ---------- Base ---------- */
+.wp-site-blocks > * + * { margin-block-start: 0; }
+.wp-block-post-content > .alignfull { margin-block-start: 0; }
+a { text-underline-offset: 3px; }
+:where(a, button, input, .wp-element-button):focus-visible { outline: 3px solid var(--wp--preset--color--yellow); outline-offset: 2px; }
+img { height: auto; }
+
+/* ---------- Top bar ---------- */
+.neas-topbar { background: var(--wp--preset--color--blue); color: var(--wp--preset--color--white); font-size: 14px; padding-top: 4px; padding-bottom: 4px; }
+.neas-topbar-row { gap: 4px 24px; }
+.neas-topbar p { margin: 0; }
+.neas-topbar a { color: var(--wp--preset--color--white); text-decoration: none; }
+.neas-topbar a:hover { text-decoration: underline; color: var(--wp--preset--color--white); }
+.neas-social.wp-block-social-links { gap: 4px; }
+.neas-social .wp-social-link a { padding: 8px; }
+
+/* ---------- Header ---------- */
+.neas-header { background: var(--wp--preset--color--white); border-bottom: 1px solid var(--wp--preset--color--border); padding-top: 12px; padding-bottom: 12px; }
+.neas-header-row { gap: 12px 32px; }
+.neas-logo { margin: 0; }
+.neas-logo img { display: block; height: 72px; width: auto; }
+.neas-menu-area { gap: 6px 12px; }
+.neas-menu .wp-block-navigation-item__content { color: var(--wp--preset--color--ink); padding: 10px 10px; text-decoration: none; }
+.neas-menu .wp-block-navigation-item__content:hover { color: var(--wp--preset--color--blue); }
+.neas-button-donate .wp-block-button__link { background: var(--wp--preset--color--yellow); color: var(--wp--preset--color--ink); padding: 10px 20px; font-size: 16px; }
+.neas-button-donate .wp-block-button__link:hover { background: #E8B200; color: var(--wp--preset--color--ink); }
+.wp-block-navigation__responsive-container.is-menu-open { background: var(--wp--preset--color--white); color: var(--wp--preset--color--ink); padding: 24px; }
+.wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content { font-size: 20px; padding: 8px 0; }
+
+/* ---------- Buttons ---------- */
+.neas-button-blue .wp-block-button__link { background: var(--wp--preset--color--blue); }
+.neas-button-blue .wp-block-button__link:hover { background: var(--wp--preset--color--purple); }
+.wp-block-button.is-style-outline .wp-block-button__link { background: var(--wp--preset--color--white); color: var(--wp--preset--color--blue); border: 2px solid var(--wp--preset--color--blue); padding: 12px 24px; }
+.wp-block-button.is-style-outline .wp-block-button__link:hover { background: var(--wp--preset--color--blue); color: var(--wp--preset--color--white); }
+
+/* ---------- Sections ---------- */
+.neas-section { padding-top: 72px; padding-bottom: 72px; }
+.neas-section:not(.neas-bg-light):not(.neas-bg-cream) + .neas-section:not(.neas-bg-light):not(.neas-bg-cream) { padding-top: 8px; }
+.neas-bg-light { background: var(--wp--preset--color--light); }
+.neas-bg-cream { background: var(--wp--preset--color--cream); }
+.neas-section h2 { margin-top: 0; }
+.neas-eyebrow { margin: 0 0 12px; font-family: var(--wp--preset--font-family--heading); font-weight: 600; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--wp--preset--color--purple); }
+.neas-subtitle { margin-top: 6px; color: var(--wp--preset--color--muted); }
+.neas-text-large { font-size: 18px; color: var(--wp--preset--color--text); }
+.neas-section-header { gap: 12px 24px; margin-bottom: 28px; }
+.neas-section-header h2, .neas-section-header p { margin-bottom: 0; }
+.neas-arrow-link { font-weight: 700; }
+.neas-arrow-link a { text-decoration: none; margin-right: 20px; display: inline-block; padding: 6px 0; }
+.neas-arrow-link a:hover { text-decoration: underline; }
+.neas-columns-spaced { gap: 56px; }
+
+/* ---------- Hero ---------- */
+.neas-hero { position: relative; overflow: hidden; background: var(--wp--preset--color--light); padding-top: 88px; padding-bottom: 96px; }
+.neas-hero::before { content: ""; position: absolute; right: -120px; top: -40px; width: 620px; height: 540px; background: var(--wp--preset--color--blue-light); clip-path: polygon(50% 0, 100% 100%, 0 100%); pointer-events: none; }
+.neas-hero > * { position: relative; }
+.neas-hero-columns { gap: 48px; }
+.neas-hero-title { margin: 0; }
+.neas-hero-text { margin-top: 24px; font-size: 20px; color: var(--wp--preset--color--text); max-width: 560px; }
+.neas-hero-buttons { margin-top: 32px; }
+
+/* ---------- Cards ---------- */
+.neas-cards { gap: 20px; }
+.neas-cards > .neas-card { flex: 1 1 250px; min-width: 0; }
+.neas-cards-wide > .neas-card { flex-basis: 420px; }
+.neas-card { border: 1px solid var(--wp--preset--color--border); border-radius: 16px; padding: 24px; }
+.neas-card > * { margin-block-start: 0; }
+.neas-card h3 { margin: 12px 0 6px; color: var(--wp--preset--color--ink); font-size: 19px; }
+.neas-card p { margin: 0; color: var(--wp--preset--color--text); }
+.neas-card-white { background: var(--wp--preset--color--white); border: 0; padding: 28px; }
+.neas-card-white h3 { margin-top: 0; margin-bottom: 10px; font-size: 20px; }
+.neas-icon { display: inline-flex; color: var(--wp--preset--color--blue); }
+
+/* Simple tables (activities) */
+.neas-table { margin: 0; }
+.neas-table table { width: 100%; border-collapse: collapse; font-size: 16px; }
+.neas-table td { border: 0; border-top: 1px solid #EEF2F7; padding: 8px 0; vertical-align: top; }
+.neas-table td:last-child { text-align: right; color: var(--wp--preset--color--muted); padding-left: 12px; white-space: nowrap; }
+
+/* ---------- Blue highlight (evangelization) ---------- */
+.neas-highlight { gap: 40px; background: var(--wp--preset--color--blue); color: var(--wp--preset--color--white); border-radius: 24px; padding: 48px; }
+.neas-highlight h2, .neas-highlight .neas-eyebrow { color: var(--wp--preset--color--white); }
+.neas-highlight p { color: #E3F0FA; font-size: 18px; }
+.neas-highlight-text { flex: 1 1 420px; min-width: 0; }
+.neas-highlight-hours { flex: 0 1 400px; gap: 16px; }
+.neas-mini-card { flex: 1 1 170px; background: var(--wp--preset--color--white); border-radius: 16px; padding: 20px; }
+.neas-mini-card > * { margin: 0; }
+.neas-highlight .neas-mini-label { font-size: 14px; font-weight: 700; color: var(--wp--preset--color--muted); text-transform: uppercase; }
+.neas-highlight .neas-mini-value { font-family: var(--wp--preset--font-family--heading); font-size: 24px; font-weight: 700; color: var(--wp--preset--color--blue); white-space: nowrap; }
+
+/* ---------- Quote ---------- */
+.wp-block-quote.neas-quote { margin: 0; background: var(--wp--preset--color--light); border-radius: 24px; padding: 40px; }
+.wp-block-quote.neas-quote p { margin: 0; }
+.wp-block-quote.neas-quote cite { display: block; margin-top: 18px; font-family: var(--wp--preset--font-family--body); font-style: normal; font-size: 15px; color: var(--wp--preset--color--muted); }
+
+/* ---------- Map ---------- */
+.neas-map { border-radius: 20px; overflow: hidden; background: var(--wp--preset--color--blue-light); line-height: 0; }
+.neas-map iframe { width: 100%; height: 380px; border: 0; }
+
+/* ---------- Instagram (Smash Balloon) ---------- */
+.neas-section-instagram #sb_instagram { padding-bottom: 0 !important; }
+.neas-section-instagram #sb_instagram .sbi_photo { border-radius: 14px; }
+
+/* ---------- Inner pages ---------- */
+.neas-title-band { background: var(--wp--preset--color--light); padding-top: 56px; padding-bottom: 48px; }
+.neas-title-band h1 { margin: 0; font-size: clamp(32px, 4vw, 44px); }
+.neas-post-date { color: var(--wp--preset--color--muted); font-weight: 600; }
+.neas-content { padding-top: 56px; padding-bottom: 72px; }
+.neas-post-image { max-width: 960px; margin: 40px auto 0; padding: 0 24px; }
+.neas-post-image img { border-radius: 16px; }
+.neas-post-grid { gap: 28px; }
+.neas-post-card { border: 1px solid var(--wp--preset--color--border); border-radius: 16px; overflow: hidden; padding-bottom: 20px; height: 100%; box-sizing: border-box; }
+.neas-post-card > *:not(.wp-block-post-featured-image) { padding-left: 20px; padding-right: 20px; }
+.neas-post-card .wp-block-post-featured-image { margin: 0 0 16px; }
+.neas-post-card .wp-block-post-date { color: var(--wp--preset--color--muted); font-size: 14px; margin: 0; }
+.neas-post-title { font-size: 20px; margin: 6px 0 8px; }
+.neas-post-title a { text-decoration: none; color: var(--wp--preset--color--ink); }
+
+/* ---------- Footer ---------- */
+.neas-footer { background: var(--wp--preset--color--blue-dark); color: #D6E8F5; font-size: 15px; padding-top: 56px; padding-bottom: 28px; }
+.neas-footer a { color: var(--wp--preset--color--white); text-decoration: none; }
+.neas-footer a:hover { text-decoration: underline; color: var(--wp--preset--color--white); }
+.neas-footer p { margin: 0 0 8px; }
+.neas-footer-name { font-family: var(--wp--preset--font-family--heading); font-weight: 700; font-size: 20px; color: var(--wp--preset--color--white); }
+.neas-footer-title { font-family: var(--wp--preset--font-family--heading); font-weight: 600; color: var(--wp--preset--color--white); }
+.neas-footer-links { line-height: 2; }
+.neas-footer-bottom { margin-top: 32px !important; padding-top: 18px; border-top: 1px solid #2F6A92; font-size: 14px; }
+
+/* ---------- Card icons (drawn by the theme) ---------- */
+.neas-card[class*="neas-ic-"]::before { content: ""; display: block; width: 28px; height: 28px; margin-bottom: 12px; background: var(--wp--preset--color--blue); -webkit-mask: var(--neas-icon) center / contain no-repeat; mask: var(--neas-icon) center / contain no-repeat; }
+.neas-ic-lecture { --neas-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 5h16v11H8l-4 4z'/%3E%3C/svg%3E"); }
+.neas-ic-heart { --neas-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z'/%3E%3C/svg%3E"); }
+.neas-ic-people { --neas-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='7' r='3'/%3E%3Ccircle cx='17' cy='9' r='2.2'/%3E%3Cpath d='M3 20a6 6 0 0 1 12 0M14.5 20a4.5 4.5 0 0 1 6.5-4'/%3E%3C/svg%3E"); }
+.neas-ic-book { --neas-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z'/%3E%3Cpath d='M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5'/%3E%3C/svg%3E"); }
+
+/* ---------- Auta de Souza ---------- */
+.neas-portrait { margin: 0; }
+.neas-portrait img { display: block; width: 100%; max-width: 440px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 50%; margin: 0 auto; box-shadow: 0 16px 40px rgba(11, 108, 168, .18); }
+.neas-section-auta .wp-block-quote.neas-quote { background: var(--wp--preset--color--white); margin-top: 24px; margin-bottom: 8px; }
+.neas-text-narrow > * { max-width: 760px; }
+
+/* ---------- Mobile ---------- */
+@media (max-width: 781px) {
+	.neas-section { padding-top: 56px; padding-bottom: 56px; }
+	.neas-hero { padding-top: 48px; padding-bottom: 56px; }
+	.neas-hero::before { width: 360px; height: 320px; right: -160px; top: -20px; }
+	.neas-hero-text { font-size: 18px; }
+	.neas-logo img { height: 52px; }
+	.neas-highlight { padding: 28px; }
+	.neas-columns-spaced { gap: 32px; }
+	.wp-block-quote.neas-quote { padding: 28px; font-size: 19px; }
+	.neas-map iframe { height: 300px; }
+}
