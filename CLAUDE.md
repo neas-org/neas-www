@@ -32,8 +32,8 @@ páginas e âncoras (`#palestras`, `#doe`…).
     vídeo dos 55 anos do YouTube, fUZSHs-TJAk), visit. O padrão `instagram` saiu da home (o Nilton
     prefere mostrar as gravações de palestras numa página própria).
   - `patterns/auta-de-souza.php` existe mas não é usado na home (o Nilton preferiu a seção "Nossa história").
-- `modules/neas-site/` — plugin (v2.0.0), slug `neas-site`; código em `includes/`
-  (`lectures.php`, `blocks.php`, `instagram.php`, `preview.php`):
+- `modules/neas-site/` — plugin (v2.2.0), slug `neas-site`; código em `includes/`
+  (`lectures.php`, `blocks.php`, `recordings.php`, `instagram.php`, `preview.php`):
   - Tipo de post `neas_lecture` (REST `wp/v2/lectures`, URL `/palestra/...`; título = tema; metas
     `neas_date` Y-m-d, `neas_time` H:i, `neas_speaker`, `neas_recording_url` = link do reel no Instagram),
     editor clássico com caixa "Dados da palestra",
@@ -41,6 +41,12 @@ páginas e âncoras (`#palestras`, `#doe`…).
   - Blocos dinâmicos (ServerSideRender, sem build): `neas/next-lecture`, `neas/upcoming-lectures {count}`,
     `neas/lecture-schedule`, `neas/past-lectures {count}` (palestras passadas com gravação, embed do
     Instagram), `neas/pix {key, display, qr}`, `neas/map {address}`. Sem shortcodes.
+  - **Gravações** (`recordings.php`): busca os reels de @neautadesouza a cada hora (WP-Cron) pela Graph API
+    (`graph.facebook.com/v25.0`, token de usuário do sistema do portfólio "NEAS", conta IG
+    17841439278400653) e guarda em opções do WP (`neas_instagram_*`; token só no banco). Associação:
+    link manual da palestra > legenda "realizada no dia DD/MM/AAAA" > primeiro reel até 36h após o
+    início da palestra; reels não associados aparecem se a legenda tiver "por X sob a luz do tema Y".
+    Tela Palestras → Instagram (colar chave, buscar agora, esconder vídeos). Player = embed do Instagram.
   - Fallback de `[instagram-feed]`: não mostra nada a visitantes enquanto o Smash Balloon não estiver instalado.
   - **Modo prévia**: `?neas_preview=1` (cookie `neas_preview`) — para usuários logados com `edit_pages`,
     troca o tema para `neas-theme`, usa a página `inicio` como página inicial e remove o prefixo "Privado:".
@@ -54,9 +60,9 @@ páginas e âncoras (`#palestras`, `#doe`…).
 - WordPress 6.7.1, PHP 7.4.33 (LiteSpeed), pt_BR, fuso America/Recife. Tema antigo: BuildPress + SiteOrigin.
   Plugins: WooCommerce + Mercado Pago, Yoast, Akismet, Loginizer, Backuply, GoSMTP.
 - API REST: use `https://www.neas.org.br/?rest_route=/wp/v2/...` com autenticação básica por
-  **senha de aplicativo** (usuário "Nilton Vieira", administrador), lida de `~/.config/neas/wp.env`
-  (`NEAS_WP_USER`, `NEAS_WP_APP_PASSWORD`; fora do repositório, nunca commitar) —
-  não está neste repositório. O mod_security devolve 406 sem um User-Agent de navegador:
+  **senha de aplicativo** (usuário "Nilton Vieira", administrador), lida de `.env` na raiz
+  (`NEAS_WP_USER`, `NEAS_WP_APP_PASSWORD`, `NEAS_IG_TOKEN`; está no `.gitignore` — **nunca commitar**;
+  modelo em `.env.example`). O mod_security devolve 406 sem um User-Agent de navegador:
   `curl -A "Mozilla/5.0 (X11; Linux x86_64) NEAS-site-setup" -H "Accept: application/json"`.
 - Não envie `template` ao atualizar páginas via REST enquanto o tema não estiver ativo (é rejeitado).
 
@@ -77,15 +83,8 @@ páginas e âncoras (`#palestras`, `#doe`…).
   `00020126430014br.gov.bcb.pix0114097901550001430203Pix5204000053039865802BR5925NUCLEO ESPIRITA AUTA DE S6006RECIFE62290525LucTDucLux5a6ZV8T4koNXgKS63046F4F`
 
 ## Pendências
-- **Gravações pelo Instagram (próxima etapa):** buscar os reels de @neautadesouza (conta Business) pela
-  API do Instagram (Instagram Login, permissão `instagram_business_basic`), guardar em cache no WP,
-  associar à palestra pela data + tema/expositor na legenda; o campo manual `neas_recording_url` tem
-  prioridade; tela "Instagram" no painel para colar a chave (salva no banco, renovação automática antes
-  dos 60 dias) e esconder vídeos que não são palestra. Aguardando o Nilton criar o app no Meta for Developers.
-- Receber do Nilton: QR code do Pix (seção Doações), foto dos trabalhadores (seção "Nossa história"),
-  prints do site da FEB (febnet.org.br) como inspiração.
-- Após mudanças no tema/plugin: `./build.sh` e o Nilton envia o zip em Plugins/Temas → Adicionar novo →
-  Enviar → "Substituir o atual pelo enviado".
+- Token do Instagram ainda com permissões a mais (publicar, mensagens, anúncios): gerar um só com
+  `instagram_basic`, trocar no `.env` e na tela Palestras → Instagram, revogar o antigo.
 - **Migração para os nomes em inglês (v2.0.0)** — aplicada em 2026-11-18: plugin `neas-site` ativo
   (o `neas-funcionalidades` foi apagado), tema `neas-theme` instalado e inativo, páginas e palestras
   atualizadas. Falta: o Nilton validar a prévia; depois apagar o tema antigo `neas` (mantido por
