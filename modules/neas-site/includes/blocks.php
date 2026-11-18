@@ -222,24 +222,21 @@ function neas_render_lecture_list( $lectures, $group_by_month ) {
 }
 
 function neas_render_past_lectures( $attributes ) {
-	$count    = isset( $attributes['count'] ) ? (int) $attributes['count'] : 24;
-	$lectures = neas_get_recorded_lectures( $count );
-	if ( empty( $lectures ) ) {
+	$count      = isset( $attributes['count'] ) ? (int) $attributes['count'] : 24;
+	$recordings = array_slice( neas_build_recordings()['items'], 0, max( 1, $count ) );
+	if ( empty( $recordings ) ) {
 		return '<p class="neas-list-empty">As gravações das palestras aparecerão aqui em breve. Enquanto isso, assista no <a href="https://www.instagram.com/neautadesouza/reels/">nosso Instagram</a>.</p>';
 	}
 	$html = '';
-	foreach ( $lectures as $lecture ) {
-		$embed_url = neas_instagram_embed_url( $lecture['recording_url'] );
-		if ( ! $embed_url ) {
-			continue;
-		}
-		$date  = (int) $lecture['day'] . ' de ' . $lecture['month'] . ' de ' . substr( $lecture['date'], 0, 4 );
-		$html .= '<article class="neas-recording">';
-		$html .= '<div class="neas-recording-video"><iframe src="' . esc_url( $embed_url ) . '" title="' . esc_attr( 'Gravação: ' . $lecture['topic'] ) . '" loading="lazy" allowfullscreen scrolling="no"></iframe></div>';
-		$html .= '<p class="neas-recording-date">' . esc_html( $date ) . '</p>';
-		$html .= '<h3 class="neas-recording-topic">' . esc_html( $lecture['topic'] ) . '</h3>';
-		if ( $lecture['speaker'] ) {
-			$html .= '<p class="neas-recording-speaker">com ' . esc_html( $lecture['speaker'] ) . '</p>';
+	foreach ( $recordings as $recording ) {
+		$embed_url = 'https://www.instagram.com/p/' . rawurlencode( $recording['code'] ) . '/embed/';
+		$date      = (int) substr( $recording['date'], 8, 2 ) . ' de ' . neas_month( $recording['date'] ) . ' de ' . substr( $recording['date'], 0, 4 );
+		$html     .= '<article class="neas-recording">';
+		$html     .= '<div class="neas-recording-video"><iframe src="' . esc_url( $embed_url ) . '" title="' . esc_attr( 'Gravação: ' . $recording['topic'] ) . '" loading="lazy" allowfullscreen scrolling="no"></iframe></div>';
+		$html     .= '<p class="neas-recording-date">' . esc_html( $date ) . '</p>';
+		$html     .= '<h3 class="neas-recording-topic">' . esc_html( $recording['topic'] ) . '</h3>';
+		if ( $recording['speaker'] ) {
+			$html .= '<p class="neas-recording-speaker">com ' . esc_html( $recording['speaker'] ) . '</p>';
 		}
 		$html .= '</article>';
 	}

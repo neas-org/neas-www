@@ -164,23 +164,22 @@ function neas_save_lecture( $post_id ) {
 		$url = trim( sanitize_text_field( wp_unslash( $_POST['neas_recording_url'] ) ) );
 		if ( '' === $url ) {
 			delete_post_meta( $post_id, 'neas_recording_url' );
-		} elseif ( neas_instagram_embed_url( $url ) ) {
+		} elseif ( neas_instagram_code( $url ) ) {
 			update_post_meta( $post_id, 'neas_recording_url', esc_url_raw( $url ) );
 		}
 	}
 }
 
 /**
- * Instagram embed address for a reel or post link, or '' if it is not one.
- * Accepts instagram.com/reel/CODE/, instagram.com/p/CODE/ and
+ * Shortcode ("DPjaD7PDRAi") of an Instagram reel or post link, or '' if it
+ * is not one. Accepts instagram.com/reel/CODE/, instagram.com/p/CODE/ and
  * instagram.com/<account>/reel/CODE/.
  */
-function neas_instagram_embed_url( $url ) {
-	if ( ! preg_match( '#^https?://(?:www\.)?instagram\.com/(?:[A-Za-z0-9_.]+/)?(reel|reels|p|tv)/([A-Za-z0-9_-]+)#', $url, $matches ) ) {
+function neas_instagram_code( $url ) {
+	if ( ! preg_match( '#^https?://(?:www\.)?instagram\.com/(?:[A-Za-z0-9_.]+/)?(?:reel|p|tv)/([A-Za-z0-9_-]+)#', (string) $url, $matches ) ) {
 		return '';
 	}
-	$type = 'reels' === $matches[1] ? 'reel' : $matches[1];
-	return 'https://www.instagram.com/' . $type . '/' . $matches[2] . '/embed/';
+	return $matches[1];
 }
 
 /* -------------------------------------------------------------------------
@@ -291,16 +290,6 @@ function neas_get_upcoming_lectures( $count ) {
 	return neas_query_lectures( $count, '>=', 'ASC', false );
 }
 
-/**
- * Past published lectures that have a recording link, most recent first.
- *
- * @param int $count Maximum number of lectures; -1 for all.
- * @return array[] Lecture data ready for display.
- */
-function neas_get_recorded_lectures( $count ) {
-	return neas_query_lectures( $count, '<', 'DESC', true );
-}
-
 function neas_query_lectures( $count, $date_compare, $order, $with_recording ) {
 	$meta_query = array(
 		'date' => array(
@@ -346,6 +335,7 @@ function neas_query_lectures( $count, $date_compare, $order, $with_recording ) {
 			'month'         => neas_month( $date ),
 			'month_short'   => neas_month( $date, true ),
 			'time'          => neas_short_time( get_post_meta( $post->ID, 'neas_time', true ) ),
+			'raw_time'      => get_post_meta( $post->ID, 'neas_time', true ),
 			'speaker'       => get_post_meta( $post->ID, 'neas_speaker', true ),
 			'recording_url' => get_post_meta( $post->ID, 'neas_recording_url', true ),
 		);
