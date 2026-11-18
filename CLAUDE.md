@@ -90,7 +90,7 @@ páginas e âncoras (`#palestras`, `#doe`…).
 - Token do Instagram ainda com permissões a mais (publicar, mensagens, anúncios): gerar um só com
   `instagram_basic`, trocar no `.env` e na tela Palestras → Instagram, revogar o antigo.
 - Receber do Nilton: QR code do Pix (seção Doações), foto dos trabalhadores (seção "Nossa história"),
-  fotos antigas da história (neas01–06.jpg de 2017 sumiram do servidor),
+  fotos melhores da história (as da pág. 15405 foram recortadas dos slides do vídeo dos 40 anos, baixa resolução),
   prints do site da FEB (febnet.org.br) como inspiração.
 - Após mudanças no tema/plugin: `./build.sh` e o Nilton envia o zip em Plugins/Temas → Adicionar novo →
   Enviar → "Substituir o atual pelo enviado".
