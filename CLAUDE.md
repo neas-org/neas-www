@@ -32,7 +32,7 @@ páginas e âncoras (`#palestras`, `#doe`…).
     vídeo dos 55 anos do YouTube, fUZSHs-TJAk), visit. O padrão `instagram` saiu da home (o Nilton
     prefere mostrar as gravações de palestras numa página própria).
   - `patterns/auta-de-souza.php` existe mas não é usado na home (o Nilton preferiu a seção "Nossa história").
-- `modules/neas-site/` — plugin (v2.2.0), slug `neas-site`; código em `includes/`
+- `modules/neas-site/` — plugin (v2.2.1), slug `neas-site`; código em `includes/`
   (`lectures.php`, `blocks.php`, `recordings.php`, `instagram.php`, `preview.php`):
   - Tipo de post `neas_lecture` (REST `wp/v2/lectures`, URL `/palestra/...`; título = tema; metas
     `neas_date` Y-m-d, `neas_time` H:i, `neas_speaker`, `neas_recording_url` = link do reel no Instagram),
@@ -41,9 +41,9 @@ páginas e âncoras (`#palestras`, `#doe`…).
   - Blocos dinâmicos (ServerSideRender, sem build): `neas/next-lecture`, `neas/upcoming-lectures {count}`,
     `neas/lecture-schedule`, `neas/past-lectures {count}` (palestras passadas com gravação, embed do
     Instagram), `neas/pix {key, display, qr}`, `neas/map {address}`. Sem shortcodes.
-  - **Gravações** (`recordings.php`): busca os reels de @neautadesouza a cada hora (WP-Cron) pela Graph API
+  - **Gravações** (`recordings.php`): busca os reels de @neautadesouza 1x/dia às 22h30 (WP-Cron) pela Graph API
     (`graph.facebook.com/v25.0`, token de usuário do sistema do portfólio "NEAS", conta IG
-    17841439278400653) e guarda em opções do WP (`neas_instagram_*`; token só no banco). Associação:
+    17841439278400653) e guarda em opções do WP (`neas_instagram_*`; token só no banco; lista em JSON só-ASCII porque o banco é utf8 e recusa emoji). Associação:
     link manual da palestra > legenda "realizada no dia DD/MM/AAAA" > primeiro reel até 36h após o
     início da palestra; reels não associados aparecem se a legenda tiver "por X sob a luz do tema Y".
     Tela Palestras → Instagram (colar chave, buscar agora, esconder vídeos). Player = embed do Instagram.

@@ -2,8 +2,8 @@
 /**
  * Lecture recordings from the NEAS Instagram reels.
  *
- * The reels are fetched from the Instagram Graph API (system-user token of
- * the NEAS business portfolio), cached in the database and matched to the
+ * The reels are fetched once a day from the Instagram Graph API (system-user
+ * token of the NEAS business portfolio), cached in the database and matched to the
  * registered lectures:
  * 1. the manual "recording link" of a lecture always wins;
  * 2. otherwise the reel whose caption says "realizada no dia DD/MM/AAAA"
@@ -25,6 +25,7 @@ const NEAS_GRAPH_API          = 'https://graph.facebook.com/v25.0/';
 const NEAS_INSTAGRAM_REELS    = 'https://www.instagram.com/neautadesouza/reels/';
 const NEAS_RECORDING_WINDOW   = 129600; // 36 hours.
 const NEAS_SYNC_HOOK          = 'neas_instagram_sync';
+const NEAS_SYNC_TIME          = '22:30'; // After the evening lectures (Sunday ones end ~17:30).
 const NEAS_OPTION_TOKEN       = 'neas_instagram_token';
 const NEAS_OPTION_ACCOUNT     = 'neas_instagram_account';
 const NEAS_OPTION_REELS       = 'neas_instagram_reels';
@@ -101,7 +102,7 @@ function neas_sync_reels( $full = false ) {
 		update_option( NEAS_OPTION_ACCOUNT, $account, false );
 	}
 
-	$reels = get_option( NEAS_OPTION_REELS, array() );
+	$reels = neas_get_cached_reels();
 	$page  = neas_graph_get(
 		$account['id'] . '/media',
 		array(
@@ -126,7 +127,7 @@ function neas_sync_reels( $full = false ) {
 				'code'      => $code,
 				'permalink' => $media['permalink'],
 				'timestamp' => strtotime( $media['timestamp'] ),
-				'caption'   => isset( $media['caption'] ) ? $media['caption'] : '',
+				'caption'   => isset( $media['caption'] ) ? mb_substr( $media['caption'], 0, 600 ) : '',
 			);
 		}
 		if ( ! $full || empty( $page['paging']['next'] ) || $pages >= 30 ) {
@@ -141,9 +142,22 @@ function neas_sync_reels( $full = false ) {
 			return $b['timestamp'] - $a['timestamp'];
 		}
 	);
-	update_option( NEAS_OPTION_REELS, $reels, false );
+	// Stored as ASCII-only JSON: the site database does not accept emoji
+	// (utf8, not utf8mb4) and would silently drop the whole value.
+	$json = wp_json_encode( $reels );
+	if ( ! $json || ( get_option( NEAS_OPTION_REELS ) !== $json && ! update_option( NEAS_OPTION_REELS, $json, false ) ) ) {
+		$error = new WP_Error( 'neas_save_failed', 'Os vídeos foram encontrados, mas não puderam ser salvos no banco de dados.' );
+		neas_save_sync_status( $error );
+		return $error;
+	}
 	neas_save_sync_status( true );
 	return count( $reels );
+}
+
+function neas_get_cached_reels() {
+	$value = get_option( NEAS_OPTION_REELS, '' );
+	$reels = is_string( $value ) ? json_decode( $value, true ) : $value;
+	return is_array( $reels ) ? $reels : array();
 }
 
 function neas_save_sync_status( $result ) {
@@ -157,16 +171,21 @@ function neas_save_sync_status( $result ) {
 	);
 }
 
-// Hourly sync while a token is configured.
+// Daily sync at NEAS_SYNC_TIME (site time zone) while a token is configured.
 add_action( NEAS_SYNC_HOOK, 'neas_sync_reels' );
 add_action(
 	'init',
 	function () {
-		$scheduled = wp_next_scheduled( NEAS_SYNC_HOOK );
-		if ( get_option( NEAS_OPTION_TOKEN ) && ! $scheduled ) {
-			wp_schedule_event( time() + MINUTE_IN_SECONDS, 'hourly', NEAS_SYNC_HOOK );
-		} elseif ( ! get_option( NEAS_OPTION_TOKEN ) && $scheduled ) {
+		$has_token = (bool) get_option( NEAS_OPTION_TOKEN );
+		if ( wp_next_scheduled( NEAS_SYNC_HOOK ) && ( ! $has_token || 'daily' !== wp_get_schedule( NEAS_SYNC_HOOK ) ) ) {
 			wp_clear_scheduled_hook( NEAS_SYNC_HOOK );
+		}
+		if ( $has_token && ! wp_next_scheduled( NEAS_SYNC_HOOK ) ) {
+			$next = new DateTime( 'today ' . NEAS_SYNC_TIME, wp_timezone() );
+			if ( $next->getTimestamp() <= time() ) {
+				$next->modify( '+1 day' );
+			}
+			wp_schedule_event( $next->getTimestamp(), 'daily', NEAS_SYNC_HOOK );
 		}
 	}
 );
@@ -205,7 +224,7 @@ function neas_parse_reel_caption( $caption ) {
  */
 function neas_build_recordings() {
 	$hidden    = get_option( NEAS_OPTION_HIDDEN, array() );
-	$all_reels = get_option( NEAS_OPTION_REELS, array() );
+	$all_reels = neas_get_cached_reels();
 	$reels     = array_diff_key( $all_reels, array_flip( $hidden ) );
 	$used      = array();
 	$items     = array();
@@ -360,7 +379,7 @@ function neas_render_instagram_page() {
 	$status     = get_option( NEAS_OPTION_SYNC_STATUS );
 	$has_token  = (bool) get_option( NEAS_OPTION_TOKEN );
 	$hidden     = array_flip( get_option( NEAS_OPTION_HIDDEN, array() ) );
-	$all_reels  = get_option( NEAS_OPTION_REELS, array() );
+	$all_reels  = neas_get_cached_reels();
 	$recordings = neas_build_recordings();
 	$message    = isset( $_GET['neas_message'] ) ? sanitize_text_field( wp_unslash( $_GET['neas_message'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 	$form_start = '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="neas_instagram">' . wp_nonce_field( 'neas_instagram', '_wpnonce', true, false );
@@ -374,7 +393,7 @@ function neas_render_instagram_page() {
 			<div class="notice notice-error"><p><strong>A última busca falhou:</strong> <?php echo esc_html( $status['error'] ); ?></p></div>
 		<?php endif; ?>
 
-		<p>O site busca sozinho, a cada hora, os vídeos (reels) do Instagram do NEAS. Cada gravação aparece em <a href="<?php echo esc_url( home_url( '/palestras-anteriores/' ) ); ?>">Palestras anteriores</a> junto da palestra cadastrada no mesmo dia. Se o vídeo certo não for encontrado, cole o link dele no cadastro da palestra.</p>
+		<p>O site busca sozinho, todo dia às <?php echo esc_html( str_replace( ':', 'h', NEAS_SYNC_TIME ) ); ?>, os vídeos (reels) do Instagram do NEAS. Cada gravação aparece em <a href="<?php echo esc_url( home_url( '/palestras-anteriores/' ) ); ?>">Palestras anteriores</a> junto da palestra cadastrada no mesmo dia. Se o vídeo certo não for encontrado, cole o link dele no cadastro da palestra.</p>
 
 		<h2>Conexão</h2>
 		<table class="form-table" role="presentation">
