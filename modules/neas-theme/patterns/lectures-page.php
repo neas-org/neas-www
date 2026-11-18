@@ -1,0 +1,17 @@
+<?php
+/**
+ * Title: Página de palestras (programação completa)
+ * Slug: neas/lectures-page
+ * Categories: neas
+ * Block Types: core/post-content
+ * Post Types: page
+ * Description: Programação completa das palestras, separada por mês.
+ *
+ * @package NEAS
+ */
+?>
+<!-- wp:paragraph {"className":"neas-text-large"} -->
+<p class="neas-text-large">As palestras públicas acontecem às <strong>terças, quintas e sábados às 20h</strong> e aos <strong>domingos às 16h30</strong>. A entrada é gratuita e aberta a todos.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:neas/lecture-schedule /-->
