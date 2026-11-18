@@ -65,7 +65,8 @@ páginas e âncoras (`#palestras`, `#doe`…).
 | 15383 | Mídia: retrato de Auta de Souza |
 | 57 | Página antiga "Auta de Souza" (pública; foto de 2017 quebrada) |
 | 14157 | Página inicial antiga "01 - Início" |
-| 15377–15380 | Palestras de teste/cadastradas |
+| 15395–15398 | Palestras cadastradas (tipo `neas_lecture`; export em `content/lectures.json`) |
+| 15377–15380 | Palestras antigas (tipo `palestra`), na lixeira |
 
 - Pix (BR Code validado, CRC ok):
   `00020126430014br.gov.bcb.pix0114097901550001430203Pix5204000053039865802BR5925NUCLEO ESPIRITA AUTA DE S6006RECIFE62290525LucTDucLux5a6ZV8T4koNXgKS63046F4F`
@@ -75,14 +76,10 @@ páginas e âncoras (`#palestras`, `#doe`…).
   prints do site da FEB (febnet.org.br) como inspiração.
 - Após mudanças no tema/plugin: `./build.sh` e o Nilton envia o zip em Plugins/Temas → Adicionar novo →
   Enviar → "Substituir o atual pelo enviado".
-- **Migração para os nomes em inglês (v2.0.0) — ainda não aplicada no site.** No site ainda estão o tema
-  `neas` e o plugin `neas-funcionalidades` (v1.1.0, ativo), com os nomes antigos. Passos:
-  1. Baixar o conteúdo atual das páginas 15373, 15374 e 15384, salvar em `content/pages/`, commit.
-  2. Rodar `tools/migrate-names.py` nesses arquivos, conferir o diff, commit.
-  3. Desativar e apagar o plugin `neas-funcionalidades`; enviar e ativar `neas-site` (nunca os dois ativos).
-  4. Recadastrar as palestras 15377–15380 no tipo novo (`wp/v2/lectures`, metas novas) e apagar as antigas.
-  5. Enviar o tema `neas-theme` e apagar o tema `neas`.
-  6. Atualizar as 3 páginas via REST com o conteúdo migrado; testar com `?neas_preview=1`.
+- **Migração para os nomes em inglês (v2.0.0)** — aplicada em 2026-11-18: plugin `neas-site` ativo
+  (o `neas-funcionalidades` foi apagado), tema `neas-theme` instalado e inativo, páginas e palestras
+  atualizadas. Falta: o Nilton validar a prévia; depois apagar o tema antigo `neas` (mantido por
+  segurança) e `tools/migrate-names.py`.
 
 ## Checklist do lançamento
 1. Backup (Backuply).
