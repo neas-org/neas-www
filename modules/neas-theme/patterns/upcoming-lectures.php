@@ -21,7 +21,7 @@
 <!-- /wp:group -->
 
 <!-- wp:paragraph {"className":"neas-arrow-link"} -->
-<p class="neas-arrow-link"><a href="<?php echo esc_url( home_url( '/palestras/' ) ); ?>">Ver programação completa →</a></p>
+<p class="neas-arrow-link"><a href="<?php echo esc_url( home_url( '/palestras/' ) ); ?>">Ver programação completa →</a>   <a href="<?php echo esc_url( home_url( '/palestras-anteriores/' ) ); ?>">Assistir palestras anteriores →</a></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 

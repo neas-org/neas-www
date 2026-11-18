@@ -27,16 +27,20 @@ páginas e âncoras (`#palestras`, `#doe`…).
   (Poppins, Nunito Sans, Lora itálico). Classes CSS com prefixo `neas-`.
   - Cores (slugs): `blue` #0B6CA8 (principal), `blue-dark` #0A4A75, `purple` #3A3D78 (destaque),
     `ink` #1F2340, `yellow` #F6C324 (botão Pix), `light` #EEF5FB, `cream` #FFF7DC.
-  - Ordem da página inicial (`patterns/home-page.php`): hero, opening-hours, upcoming-lectures,
-    activities, evangelization, instagram, donations, history, visit.
+  - Ordem da página inicial (`patterns/home-page.php`): hero, opening-hours, upcoming-lectures
+    (com link "Assistir palestras anteriores"), activities, evangelization, donations, history (com o
+    vídeo dos 55 anos do YouTube, fUZSHs-TJAk), visit. O padrão `instagram` saiu da home (o Nilton
+    prefere mostrar as gravações de palestras numa página própria).
   - `patterns/auta-de-souza.php` existe mas não é usado na home (o Nilton preferiu a seção "Nossa história").
 - `modules/neas-site/` — plugin (v2.0.0), slug `neas-site`; código em `includes/`
   (`lectures.php`, `blocks.php`, `instagram.php`, `preview.php`):
   - Tipo de post `neas_lecture` (REST `wp/v2/lectures`, URL `/palestra/...`; título = tema; metas
-    `neas_date` Y-m-d, `neas_time` H:i, `neas_speaker`), editor clássico com caixa "Dados da palestra",
+    `neas_date` Y-m-d, `neas_time` H:i, `neas_speaker`, `neas_recording_url` = link do reel no Instagram),
+    editor clássico com caixa "Dados da palestra",
     colunas no admin.
   - Blocos dinâmicos (ServerSideRender, sem build): `neas/next-lecture`, `neas/upcoming-lectures {count}`,
-    `neas/lecture-schedule`, `neas/pix {key, display, qr}`, `neas/map {address}`. Sem shortcodes.
+    `neas/lecture-schedule`, `neas/past-lectures {count}` (palestras passadas com gravação, embed do
+    Instagram), `neas/pix {key, display, qr}`, `neas/map {address}`. Sem shortcodes.
   - Fallback de `[instagram-feed]`: não mostra nada a visitantes enquanto o Smash Balloon não estiver instalado.
   - **Modo prévia**: `?neas_preview=1` (cookie `neas_preview`) — para usuários logados com `edit_pages`,
     troca o tema para `neas-theme`, usa a página `inicio` como página inicial e remove o prefixo "Privado:".
@@ -61,6 +65,7 @@ páginas e âncoras (`#palestras`, `#doe`…).
 |---|---|
 | 15373 | "Início (novo)" — privada, slug `inicio` (`content/pages/inicio.html`) |
 | 15374 | "Palestras" — privada, slug `palestras` |
+| 15400 | "Palestras anteriores" — privada, slug `palestras-anteriores` |
 | 15384 | "Auta de Souza (nova versão)" — privada, slug `auta-de-souza-nova` (retrato + texto original da pág. 57) |
 | 15383 | Mídia: retrato de Auta de Souza |
 | 57 | Página antiga "Auta de Souza" (pública; foto de 2017 quebrada) |
@@ -72,6 +77,11 @@ páginas e âncoras (`#palestras`, `#doe`…).
   `00020126430014br.gov.bcb.pix0114097901550001430203Pix5204000053039865802BR5925NUCLEO ESPIRITA AUTA DE S6006RECIFE62290525LucTDucLux5a6ZV8T4koNXgKS63046F4F`
 
 ## Pendências
+- **Gravações pelo Instagram (próxima etapa):** buscar os reels de @neautadesouza (conta Business) pela
+  API do Instagram (Instagram Login, permissão `instagram_business_basic`), guardar em cache no WP,
+  associar à palestra pela data + tema/expositor na legenda; o campo manual `neas_recording_url` tem
+  prioridade; tela "Instagram" no painel para colar a chave (salva no banco, renovação automática antes
+  dos 60 dias) e esconder vídeos que não são palestra. Aguardando o Nilton criar o app no Meta for Developers.
 - Receber do Nilton: QR code do Pix (seção Doações), foto dos trabalhadores (seção "Nossa história"),
   prints do site da FEB (febnet.org.br) como inspiração.
 - Após mudanças no tema/plugin: `./build.sh` e o Nilton envia o zip em Plugins/Temas → Adicionar novo →

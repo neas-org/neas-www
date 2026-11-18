@@ -20,8 +20,6 @@
 
 <!-- wp:pattern {"slug":"neas/evangelization"} /-->
 
-<!-- wp:pattern {"slug":"neas/instagram"} /-->
-
 <!-- wp:pattern {"slug":"neas/donations"} /-->
 
 <!-- wp:pattern {"slug":"neas/history"} /-->
