@@ -49,6 +49,15 @@
 		} );
 	} );
 	registerBlock( 'neas/lecture-schedule', 'Programação completa de palestras' );
+	registerBlock( 'neas/past-lectures', 'Palestras anteriores (gravações)', function ( props ) {
+		return el( RangeControl, {
+			label: 'Quantas gravações mostrar',
+			min: 1,
+			max: 60,
+			value: props.attributes.count,
+			onChange: function ( value ) { props.setAttributes( { count: value } ); }
+		} );
+	} );
 	registerBlock( 'neas/pix', 'Doação Pix', function ( props ) {
 		return [
 			textControl( props, 'key', 'Chave Pix (só números)' ),

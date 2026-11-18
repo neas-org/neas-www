@@ -87,6 +87,25 @@ function neas_register_blocks() {
 	);
 
 	register_block_type(
+		'neas/past-lectures',
+		array_merge(
+			$common,
+			array(
+				'title'           => 'Palestras anteriores (gravações)',
+				'description'     => 'Palestras que já aconteceram e têm gravação, com o vídeo do Instagram.',
+				'icon'            => 'video-alt3',
+				'attributes'      => array(
+					'count' => array(
+						'type'    => 'number',
+						'default' => 24,
+					),
+				),
+				'render_callback' => 'neas_render_past_lectures',
+			)
+		)
+	);
+
+	register_block_type(
 		'neas/pix',
 		array_merge(
 			$common,
@@ -200,6 +219,31 @@ function neas_render_lecture_list( $lectures, $group_by_month ) {
 		$html .= '</ul>';
 	}
 	return '<div class="neas-lectures">' . $html . '</div>';
+}
+
+function neas_render_past_lectures( $attributes ) {
+	$count    = isset( $attributes['count'] ) ? (int) $attributes['count'] : 24;
+	$lectures = neas_get_recorded_lectures( $count );
+	if ( empty( $lectures ) ) {
+		return '<p class="neas-list-empty">As gravações das palestras aparecerão aqui em breve. Enquanto isso, assista no <a href="https://www.instagram.com/neautadesouza/reels/">nosso Instagram</a>.</p>';
+	}
+	$html = '';
+	foreach ( $lectures as $lecture ) {
+		$embed_url = neas_instagram_embed_url( $lecture['recording_url'] );
+		if ( ! $embed_url ) {
+			continue;
+		}
+		$date  = (int) $lecture['day'] . ' de ' . $lecture['month'] . ' de ' . substr( $lecture['date'], 0, 4 );
+		$html .= '<article class="neas-recording">';
+		$html .= '<div class="neas-recording-video"><iframe src="' . esc_url( $embed_url ) . '" title="' . esc_attr( 'Gravação: ' . $lecture['topic'] ) . '" loading="lazy" allowfullscreen scrolling="no"></iframe></div>';
+		$html .= '<p class="neas-recording-date">' . esc_html( $date ) . '</p>';
+		$html .= '<h3 class="neas-recording-topic">' . esc_html( $lecture['topic'] ) . '</h3>';
+		if ( $lecture['speaker'] ) {
+			$html .= '<p class="neas-recording-speaker">com ' . esc_html( $lecture['speaker'] ) . '</p>';
+		}
+		$html .= '</article>';
+	}
+	return '<div class="neas-recordings">' . $html . '</div>';
 }
 
 function neas_render_pix( $attributes ) {

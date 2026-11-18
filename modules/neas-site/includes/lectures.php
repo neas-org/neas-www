@@ -44,9 +44,10 @@ function neas_register_lecture_post_type() {
 	);
 
 	$fields = array(
-		'neas_date'    => 'Data da palestra (AAAA-MM-DD)',
-		'neas_time'    => 'Horário (HH:MM)',
-		'neas_speaker' => 'Expositor(a)',
+		'neas_date'          => 'Data da palestra (AAAA-MM-DD)',
+		'neas_time'          => 'Horário (HH:MM)',
+		'neas_speaker'       => 'Expositor(a)',
+		'neas_recording_url' => 'Link da gravação no Instagram',
 	);
 	foreach ( $fields as $key => $description ) {
 		register_post_meta(
@@ -100,6 +101,7 @@ function neas_render_lecture_meta_box( $post ) {
 	$date    = get_post_meta( $post->ID, 'neas_date', true );
 	$time    = get_post_meta( $post->ID, 'neas_time', true );
 	$speaker = get_post_meta( $post->ID, 'neas_speaker', true );
+	$video   = get_post_meta( $post->ID, 'neas_recording_url', true );
 	if ( '' === $time ) {
 		$time = '20:00';
 	}
@@ -124,7 +126,11 @@ function neas_render_lecture_meta_box( $post ) {
 			<input type="text" id="neas_speaker" name="neas_speaker" value="<?php echo esc_attr( $speaker ); ?>" placeholder="Ex.: Maria José Carvalho">
 		</p>
 	</div>
-	<p class="neas-hint">Escreva o tema da palestra no título acima. Depois da data, a palestra sai sozinha da página inicial.</p>
+	<p>
+		<label for="neas_recording_url"><strong>Link da gravação no Instagram</strong> (opcional)</label><br>
+		<input type="url" id="neas_recording_url" name="neas_recording_url" value="<?php echo esc_attr( $video ); ?>" placeholder="https://www.instagram.com/reel/..." style="width: 100%; font-size: 15px; padding: 6px 8px;">
+	</p>
+	<p class="neas-hint">Escreva o tema da palestra no título acima. Depois da data, a palestra sai sozinha da página inicial. Quando a gravação for publicada no Instagram, cole o link dela acima para aparecer em "Palestras anteriores".</p>
 	<?php
 }
 
@@ -154,6 +160,27 @@ function neas_save_lecture( $post_id ) {
 	if ( isset( $_POST['neas_speaker'] ) ) {
 		update_post_meta( $post_id, 'neas_speaker', sanitize_text_field( wp_unslash( $_POST['neas_speaker'] ) ) );
 	}
+	if ( isset( $_POST['neas_recording_url'] ) ) {
+		$url = trim( sanitize_text_field( wp_unslash( $_POST['neas_recording_url'] ) ) );
+		if ( '' === $url ) {
+			delete_post_meta( $post_id, 'neas_recording_url' );
+		} elseif ( neas_instagram_embed_url( $url ) ) {
+			update_post_meta( $post_id, 'neas_recording_url', esc_url_raw( $url ) );
+		}
+	}
+}
+
+/**
+ * Instagram embed address for a reel or post link, or '' if it is not one.
+ * Accepts instagram.com/reel/CODE/, instagram.com/p/CODE/ and
+ * instagram.com/<account>/reel/CODE/.
+ */
+function neas_instagram_embed_url( $url ) {
+	if ( ! preg_match( '#^https?://(?:www\.)?instagram\.com/(?:[A-Za-z0-9_.]+/)?(reel|reels|p|tv)/([A-Za-z0-9_-]+)#', $url, $matches ) ) {
+		return '';
+	}
+	$type = 'reels' === $matches[1] ? 'reel' : $matches[1];
+	return 'https://www.instagram.com/' . $type . '/' . $matches[2] . '/embed/';
 }
 
 /* -------------------------------------------------------------------------
@@ -173,6 +200,7 @@ add_filter(
 				$new_columns['neas_date']    = 'Data';
 				$new_columns['neas_time']    = 'Horário';
 				$new_columns['neas_speaker'] = 'Expositor(a)';
+				$new_columns['neas_recording_url'] = 'Gravação';
 			}
 		}
 		return $new_columns;
@@ -185,6 +213,9 @@ add_action(
 		$value = get_post_meta( $post_id, $column, true );
 		if ( 'neas_date' === $column && $value ) {
 			$value = neas_weekday( $value, true ) . ', ' . mysql2date( 'd/m/Y', $value );
+		}
+		if ( 'neas_recording_url' === $column ) {
+			$value = $value ? '✓' : '';
 		}
 		echo esc_html( $value );
 	},
@@ -257,27 +288,49 @@ function neas_short_time( $time ) {
  * @return array[] Lecture data ready for display.
  */
 function neas_get_upcoming_lectures( $count ) {
+	return neas_query_lectures( $count, '>=', 'ASC', false );
+}
+
+/**
+ * Past published lectures that have a recording link, most recent first.
+ *
+ * @param int $count Maximum number of lectures; -1 for all.
+ * @return array[] Lecture data ready for display.
+ */
+function neas_get_recorded_lectures( $count ) {
+	return neas_query_lectures( $count, '<', 'DESC', true );
+}
+
+function neas_query_lectures( $count, $date_compare, $order, $with_recording ) {
+	$meta_query = array(
+		'date' => array(
+			'key'     => 'neas_date',
+			'value'   => current_time( 'Y-m-d' ),
+			'compare' => $date_compare,
+			'type'    => 'DATE',
+		),
+		'time' => array(
+			'key'     => 'neas_time',
+			'compare' => 'EXISTS',
+		),
+	);
+	if ( $with_recording ) {
+		$meta_query['recording'] = array(
+			'key'     => 'neas_recording_url',
+			'value'   => '',
+			'compare' => '!=',
+		);
+	}
 	$query = new WP_Query(
 		array(
 			'post_type'      => NEAS_LECTURE_POST_TYPE,
 			'post_status'    => 'publish',
 			'posts_per_page' => (int) $count,
 			'no_found_rows'  => true,
-			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery
-				'date' => array(
-					'key'     => 'neas_date',
-					'value'   => current_time( 'Y-m-d' ),
-					'compare' => '>=',
-					'type'    => 'DATE',
-				),
-				'time' => array(
-					'key'     => 'neas_time',
-					'compare' => 'EXISTS',
-				),
-			),
+			'meta_query'     => $meta_query, // phpcs:ignore WordPress.DB.SlowDBQuery
 			'orderby'        => array(
-				'date' => 'ASC',
-				'time' => 'ASC',
+				'date' => $order,
+				'time' => $order,
 			),
 		)
 	);
@@ -294,6 +347,7 @@ function neas_get_upcoming_lectures( $count ) {
 			'month_short'   => neas_month( $date, true ),
 			'time'          => neas_short_time( get_post_meta( $post->ID, 'neas_time', true ) ),
 			'speaker'       => get_post_meta( $post->ID, 'neas_speaker', true ),
+			'recording_url' => get_post_meta( $post->ID, 'neas_recording_url', true ),
 		);
 	}
 	return $lectures;
