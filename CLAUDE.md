@@ -75,6 +75,7 @@ páginas e âncoras (`#palestras`, `#doe`…).
 | 15374 | "Palestras" — privada, slug `palestras` |
 | 15400 | "Palestras anteriores" — privada, slug `palestras-anteriores` |
 | 15405 | "Nossa história (nova versão)" — privada, slug `neas-nova` (vídeo 55 anos + linha do tempo com o texto original da pág. 45) |
+| 15418 | "Atividades do NEAS (nova versão)" — privada, slug `atividades-do-neas-nova` (dados da pág. 69 reorganizados em cartões por grupo) |
 | 45 | Página antiga "NEAS" (`/neas/`, pública; 6 fotos de 2017 quebradas) |
 | 15384 | "Auta de Souza (nova versão)" — privada, slug `auta-de-souza-nova` (retrato + texto original da pág. 57) |
 | 15383 | Mídia: retrato de Auta de Souza |
@@ -103,7 +104,7 @@ páginas e âncoras (`#palestras`, `#doe`…).
 1. Backup (Backuply).
 2. Ativar o tema `neas-theme`.
 3. Publicar 15373 (renomear para "Início") e definir como página inicial; publicar 15374.
-4. Passar o conteúdo de 15384 para a página 57 e o de 15405 para a 45; apagar 15384 e 15405.
+4. Passar o conteúdo de 15384 → 57, 15405 → 45 e 15418 → 69; apagar 15384, 15405 e 15418.
 5. Redirecionar `/paletras-publicas/` → `/palestras/`.
 6. Instalar e conectar Smash Balloon Instagram Feed (@neautadesouza) e trocar o shortcode pelo bloco.
 7. Verificar se o WooCommerce é usado; desativar o que não for (BuildPress, SiteOrigin, WooCommerce).
