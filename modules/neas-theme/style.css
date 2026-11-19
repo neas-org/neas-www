@@ -1,7 +1,7 @@
 /*
 Theme Name: NEAS
 Description: Tema do Núcleo Espírita Auta de Souza. Leve, feito para o editor de blocos do WordPress, com as cores e a identidade visual da casa.
-Version: 2.2.2
+Version: 2.3.0
 Requires at least: 6.5
 Tested up to: 6.7
 Requires PHP: 7.4
@@ -82,6 +82,15 @@ img { height: auto; }
 .neas-card-white { background: var(--wp--preset--color--white); border: 0; padding: 28px; }
 .neas-card-white h3 { margin-top: 0; margin-bottom: 10px; font-size: 20px; }
 .neas-icon { display: inline-flex; color: var(--wp--preset--color--blue); }
+
+.neas-card-when { margin-top: 0 !important; font-weight: 700; color: var(--wp--preset--color--blue) !important; }
+.neas-card .neas-card-when + p { margin-top: 8px; font-size: 15px; }
+
+/* Jump links (activities page) */
+.neas-jump-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.neas-jump-links a { display: inline-block; padding: 8px 18px; border: 2px solid var(--wp--preset--color--blue); border-radius: 999px; font-weight: 700; text-decoration: none; }
+.neas-jump-links a:hover { background: var(--wp--preset--color--blue); color: var(--wp--preset--color--white); }
+.neas-section > .neas-highlight { margin-top: 40px; }
 
 /* Simple tables (activities) */
 .neas-table { margin: 0; }

@@ -12,7 +12,7 @@ arquivos das imagens não existem mais no servidor (mesmo problema da foto antig
 |---|---|---|---|---|
 | 45 | NEAS (Nossa História) | `/neas/` | Menu. 6 fotos quebradas; vídeo "NEAS 40 Anos – Parte 1" funciona | **Feito:** nova versão privada 15405 (`/neas-nova/`), com o vídeo dos 55 anos em destaque, linha do tempo com o texto original e o vídeo dos 40 anos. Faltam as fotos. No lançamento: passar o conteúdo para a 45 |
 | 57 | Auta de Souza | `/auta-de-souza/` | Menu. Foto quebrada | **Feito:** nova versão privada 15384 |
-| 69 | Atividades do NEAS | `/atividades-do-neas/` | Menu; a home nova aponta para ela | Remodelar (horários e descrição de cada atividade) |
+| 69 | Atividades do NEAS | `/atividades-do-neas/` | Menu; a home nova aponta para ela | **Feito:** nova versão privada 15418 (`/atividades-do-neas-nova/`), mesmos dados organizados em cartões por grupo. O Nilton vai revisar atividades que mudaram ou acabaram |
 | 13117 | Atendimento Fraterno | `/atendimento-fraterno/` | O conteúdo são só 6 imagens, sem texto | Remodelar em texto (o que é, horários, como funciona) |
 | 62 | Administração | `/administracao/` | Menu. Texto curto + organograma em PDF | Juntar com as coordenadorias numa página só, "Nossa organização" |
 | 138, 158, 168, 172, 589–594 | Coordenadorias: CCG, CEME, CESDE, CECJ, CED, CAE, CAPS, CTG, CPT, CEM | `/ccg/`, `/ceme/`… | Textos curtos ("Nossos objetivos") + PDF | Virar seções da página "Nossa organização"; os PDFs continuam como anexo |
